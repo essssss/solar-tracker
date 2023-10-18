@@ -6,19 +6,18 @@ import { DateTime } from "luxon";
 
 import LocationPicker from "./LocationPicker";
 
-export default function DateLocForm() {
+export default function DateLocForm({
+    lat,
+    lng,
+    date,
+    onLocationChange,
+    onDateChange,
+}) {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-    const [lat, setLat] = useState(38.8409);
-    const [long, setLong] = useState(-105.0423);
+    // const [lat, setLat] = useState(38.8409);
+    // const [lng, setlng] = useState(-105.0423);
     const [tzId, setTzId] = useState();
-    // Initialize the date state to the current date in "yyyy-MM-dd" format
-    const currentDate = DateTime.local();
-    const initialDate = currentDate.toFormat("yyyy-MM-dd");
 
-    const [date, setDate] = useState({
-        startDate: initialDate,
-        endDate: initialDate,
-    });
     const [timestamp, setTimestamp] = useState();
 
     // This function converts the date from the datepicker into a timestamp that we can use for our API call and our sunCalc math:
@@ -39,7 +38,7 @@ export default function DateLocForm() {
     const getTimeZone = async () => {
         try {
             const response = await axios.get(
-                `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${long}&timestamp=${timestamp}&key=${apiKey}`
+                `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lng}&timestamp=${timestamp}&key=${apiKey}`
             );
 
             if (response.data.status === "ZERO_RESULTS") {
@@ -51,15 +50,9 @@ export default function DateLocForm() {
         }
     };
 
-    // This is our suncalc function to get important times:
-    const timeObj = () => {
-        let times = SunCalc.getSunTimes(timestamp);
-    };
-
     // This is our form handler:
     const handleDateChange = (newDate) => {
-        console.log("newDate:", newDate);
-        setDate(newDate);
+        onDateChange(newDate); // Update the date in the parent component
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -82,44 +75,17 @@ export default function DateLocForm() {
                         />
                     </div>
                 </div>
-                {/* TODO: this will be our map picker: */}
 
                 <div className="container mx-aut p-6">
                     {/* Include the Map component for the map */}
-                    {/* <Map
-                        lat={lat}
-                        lng={long}
-                        onLocationChange={(lat, long) => {
-                            setLat(lat);
-                            setLong(long);
-                        }}
-                    /> */}
+
                     <LocationPicker
                         lat={lat}
-                        lng={long}
-                        onLocationChange={(lat, long) => {
-                            setLat(lat);
-                            setLong(long);
-                        }}
+                        lng={lng}
+                        onLocationChange={onLocationChange}
                     />
                 </div>
 
-                {/* <div className="container mx-aut p-6">
-                <label htmlFor="lat">Latitude: </label>
-                <input
-                    id="lat"
-                    type="text"
-                    value={lat}
-                    onChange={(e) => setLat(e.target.value)}
-                ></input>
-                <label htmlFor="long"> Longitude: </label>
-                <input
-                    id="long"
-                    type="text"
-                    value={long}
-                    onChange={(e) => setLong(e.target.value)}
-                ></input>
-            </div> */}
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
                     onClick={handleSubmit}

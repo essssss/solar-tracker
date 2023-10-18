@@ -15,7 +15,7 @@ export default function LocationPicker({ lat, lng, onLocationChange }) {
                 zoom={12}
                 onClick={({ lat, lng }) => onLocationChange(lat, lng)}
             >
-                <Marker lat={lat} lng={lng} text="My Marker" />
+                <Marker lat={lat} lng={lng} text="<<<-My Marker" />
             </GoogleMapReact>
         </div>
     );

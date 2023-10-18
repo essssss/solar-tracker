@@ -1,27 +1,42 @@
 let SunCalc = require("suncalc3");
 
-export default function SunData() {
-    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-    const SAMPLEDATE = "2021-04-28";
-    const SAMPLELAT = 39.9042;
-    const SAMPLELONG = 116.4074;
-    let sunData = SunCalc.getSunTimes(SAMPLEDATE, SAMPLELAT, SAMPLELONG);
-    let sunriseStart = sunData.sunriseStart.value.toISOString();
-    let solarNoon = sunData.solarNoon.value.toISOString();
-    let sunsetEnd = sunData.sunsetEnd.value.toISOString();
-    console.log(apiKey);
+export default function SunData({ lat, lng, date }) {
+    console.log(date);
+    let sunData = SunCalc.getSunTimes(date, lat, lng);
+    console.log(sunData);
+    let sunriseStart = sunData.sunriseStart.value.toTimeString();
+    let solarNoon = sunData.solarNoon.value.toTimeString();
+    let sunsetEnd = sunData.sunsetEnd.value.toTimeString();
 
+    //INTERLUDE
+    // Currently all data is in America/New_York time
+    let sunriseStr =
+        sunData.sunriseStart.value.getHours() +
+        ":" +
+        sunData.sunriseStart.value.getMinutes();
+    console.log(sunriseStr);
+
+    let noonStr =
+        sunData.solarNoon.value.getHours() +
+        ":" +
+        sunData.solarNoon.value.getMinutes();
+    let sunsetStr =
+        sunData.sunsetEnd.value.getHours() -
+        12 +
+        ":" +
+        sunData.sunsetEnd.value.getMinutes();
+    // Back to the real program
     return (
         <div>
             <ul>
                 <li>
-                    <em>Sunrise Start: </em> {sunriseStart}
+                    <b>Sunrise Start: </b> {sunriseStr} AM
                 </li>
                 <li>
-                    <em>Noon: </em> {solarNoon}
+                    <b>Noon: </b> {noonStr}
                 </li>
                 <li>
-                    <em>Sunset End: </em> {sunsetEnd}
+                    <b>Sunset End: </b> {sunsetStr} PM
                 </li>
             </ul>
         </div>
