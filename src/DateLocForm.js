@@ -4,10 +4,12 @@ import axios from "axios";
 import SunCalc from "suncalc3";
 import { DateTime } from "luxon";
 
+import LocationPicker from "./LocationPicker";
+
 export default function DateLocForm() {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-    const [sampleLat, setSampleLat] = useState(38.8409);
-    const [sampleLong, setSampleLong] = useState(-105.0423);
+    const [lat, setLat] = useState(38.8409);
+    const [long, setLong] = useState(-105.0423);
     const [tzId, setTzId] = useState();
     // Initialize the date state to the current date in "yyyy-MM-dd" format
     const currentDate = DateTime.local();
@@ -37,7 +39,7 @@ export default function DateLocForm() {
     const getTimeZone = async () => {
         try {
             const response = await axios.get(
-                `https://maps.googleapis.com/maps/api/timezone/json?location=${sampleLat},${sampleLong}&timestamp=${timestamp}&key=${apiKey}`
+                `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${long}&timestamp=${timestamp}&key=${apiKey}`
             );
 
             if (response.data.status === "ZERO_RESULTS") {
@@ -67,36 +69,64 @@ export default function DateLocForm() {
         console.log(submittedDate, timestamp, tzId);
     };
     return (
-        <form className="rounded-lg  container bg-slate-200 mx-auto w-1/2">
-            <div className="container mx-aut p-6">
-                <div className="sm:col-span-4 mx-auto">
-                    <Datepicker
-                        primaryColor={"slate"}
-                        useRange={false}
-                        asSingle={true}
-                        value={date}
-                        onChange={handleDateChange}
+        <div className="rounded-lg  container bg-slate-200 mx-auto w-1/2 my-4 p-4">
+            <form>
+                <div className="container mx-aut p-6">
+                    <div className="sm:col-span-4 mx-auto">
+                        <Datepicker
+                            primaryColor={"slate"}
+                            useRange={false}
+                            asSingle={true}
+                            value={date}
+                            onChange={handleDateChange}
+                        />
+                    </div>
+                </div>
+                {/* TODO: this will be our map picker: */}
+
+                <div className="container mx-aut p-6">
+                    {/* Include the Map component for the map */}
+                    {/* <Map
+                        lat={lat}
+                        lng={long}
+                        onLocationChange={(lat, long) => {
+                            setLat(lat);
+                            setLong(long);
+                        }}
+                    /> */}
+                    <LocationPicker
+                        lat={lat}
+                        lng={long}
+                        onLocationChange={(lat, long) => {
+                            setLat(lat);
+                            setLong(long);
+                        }}
                     />
                 </div>
-            </div>
-            {/* TODO: this will be our map picker: */}
-            <div className="container mx-aut p-6">
+
+                {/* <div className="container mx-aut p-6">
                 <label htmlFor="lat">Latitude: </label>
                 <input
                     id="lat"
                     type="text"
-                    value={sampleLat}
-                    onChange={(e) => setSampleLat(e.target.value)}
+                    value={lat}
+                    onChange={(e) => setLat(e.target.value)}
                 ></input>
                 <label htmlFor="long"> Longitude: </label>
                 <input
                     id="long"
                     type="text"
-                    value={sampleLong}
-                    onChange={(e) => setSampleLong(e.target.value)}
+                    value={long}
+                    onChange={(e) => setLong(e.target.value)}
                 ></input>
-            </div>
-            <button onClick={handleSubmit}>See results</button>
-        </form>
+            </div> */}
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                    onClick={handleSubmit}
+                >
+                    See results
+                </button>
+            </form>
+        </div>
     );
 }
