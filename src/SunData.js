@@ -22,20 +22,43 @@ export default function SunData({ lat, lng, date }) {
     // TODO Currently all data is in America/New_York time. If a Minutes value starts with 0, it needs to be added to the string
 
     function convertTimeToStr(timeType) {
-        const timeStr =
-            sunData[timeType].value.getHours() +
-            ":" +
-            sunData[timeType].value.getMinutes();
-        return timeStr;
+        let hours = sunData[timeType].value.getHours();
+        let minutes = sunData[timeType].value.getMinutes();
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        if (hours >= 12) {
+            hours = hours - 12;
+            return hours + ":" + minutes + " PM";
+        }
+        return hours + ":" + minutes + " AM";
     }
-    // Back to the real program
 
-    const timeObj = keyTimesArr.reduce((result, time) => {
-        result[time] = convertTimeToStr(time);
-        // console.log(sunData[time].ts);
+    const sunDataObj = keyTimesArr.reduce((result, time) => {
+        const timestamp = sunData[time].ts;
+        const sunPositionRadians = SunCalc.getPosition(
+            timestamp,
+            lat,
+            lng
+        ).azimuth;
+
+        const sunPositionDegrees =
+            Math.floor(sunPositionRadians * (180 / Math.PI) * 10) / 10;
+
+        const sunHeight =
+            Math.floor(
+                SunCalc.getPosition(timestamp, lat, lng).altitudeDegrees * 10
+            ) / 10;
+
+        result[time] = {
+            time: convertTimeToStr(time),
+            position: sunPositionDegrees,
+            height: sunHeight,
+        };
+
         return result;
     }, {});
-    // console.log(timeObj);
+    console.log(sunDataObj);
 
     return (
         <div className="rounded-lg  container bg-slate-100 p-4 my-4 mx-auto">
@@ -43,7 +66,14 @@ export default function SunData({ lat, lng, date }) {
                 {keyTimesArr.map((time) => {
                     return (
                         <li key={time}>
-                            <b>{time}</b>: {timeObj[time]}
+                            <b>{time}</b>: {sunDataObj[time].time}
+                            <br />
+                            <b>Position: </b> {sunDataObj[time].position}°
+                            <br />
+                            <b>Height: </b> {sunDataObj[time].height}°
+                            <br />
+                            ---
+                            <br />
                         </li>
                     );
                 })}

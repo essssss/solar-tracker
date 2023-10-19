@@ -23,8 +23,6 @@ function App() {
         console.log(tzId);
     }, [tzId]);
 
-    //TODO add timestamp conversion here. Remove it from state
-
     const getTimeZone = async () => {
         const selectedStartDate = DateTime.fromFormat(
             date.startDate,
