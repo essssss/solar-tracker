@@ -4,40 +4,45 @@ export default function SunData({ lat, lng, date }) {
     console.log(date);
     let sunData = SunCalc.getSunTimes(date, lat, lng);
     console.log(sunData);
-    let sunriseStart = sunData.sunriseStart.value.toTimeString();
-    let solarNoon = sunData.solarNoon.value.toTimeString();
-    let sunsetEnd = sunData.sunsetEnd.value.toTimeString();
 
-    //INTERLUDE
-    // Currently all data is in America/New_York time
-    let sunriseStr =
-        sunData.sunriseStart.value.getHours() +
-        ":" +
-        sunData.sunriseStart.value.getMinutes();
-    console.log(sunriseStr);
+    // TODO Currently all data is in America/New_York time. If a Minutes value starts with 0, it needs to be added to the string
 
-    let noonStr =
-        sunData.solarNoon.value.getHours() +
-        ":" +
-        sunData.solarNoon.value.getMinutes();
-    let sunsetStr =
-        sunData.sunsetEnd.value.getHours() -
-        12 +
-        ":" +
-        sunData.sunsetEnd.value.getMinutes();
+    function convertTime(timeType) {
+        const timeStr =
+            sunData[timeType].value.getHours() +
+            ":" +
+            sunData[timeType].value.getMinutes();
+        return timeStr;
+    }
     // Back to the real program
+
+    let keyTimesArr = [
+        "blueHourDawnStart",
+        "blueHourDawnEnd",
+        "goldenHourDawnStart",
+        "goldenHourDawnEnd",
+        "solarNoon",
+        "goldenHourDuskStart",
+        "goldenHourDuskEnd",
+        "blueHourDuskStart",
+        "blueHourDuskEnd",
+    ];
+    const timeObj = keyTimesArr.reduce((result, time) => {
+        result[time] = convertTime(time);
+        return result;
+    }, {});
+    console.log(timeObj);
+
     return (
         <div>
             <ul>
-                <li>
-                    <b>Sunrise Start: </b> {sunriseStr} AM
-                </li>
-                <li>
-                    <b>Noon: </b> {noonStr}
-                </li>
-                <li>
-                    <b>Sunset End: </b> {sunsetStr} PM
-                </li>
+                {keyTimesArr.map((time) => {
+                    return (
+                        <li>
+                            <b>{time}</b>: {timeObj[time]}
+                        </li>
+                    );
+                })}
             </ul>
         </div>
     );
