@@ -1,8 +1,4 @@
-import { useState, useEffect } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
-import axios from "axios";
-import { DateTime } from "luxon";
-import ArcOverlay from "./ArcOverlay";
 
 import LocationPicker from "./LocationPicker";
 
@@ -12,12 +8,14 @@ export default function DateLocForm({
     date,
     onLocationChange,
     onDateChange,
+    sunDataObj,
+    keyTimesArr,
 }) {
     // This is our form handler:
     const handleDateChange = (newDate) => {
         if (newDate.startDate) onDateChange(newDate); // Update the date in the parent component
     };
-
+    console.log(sunDataObj);
     return (
         <div className="mx-aut">
             <form className="mx-aut">
@@ -40,6 +38,8 @@ export default function DateLocForm({
                         lat={lat}
                         lng={lng}
                         onLocationChange={onLocationChange}
+                        sunDataObj={sunDataObj}
+                        keyTimesArr={keyTimesArr}
                     />
                 </div>
             </form>

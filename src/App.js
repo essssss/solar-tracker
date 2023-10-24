@@ -110,6 +110,8 @@ function App() {
                 onDateChange={(newDate) => {
                     setDate(newDate);
                 }}
+                sunDataObj={sunDataObj}
+                keyTimesArr={keyTimesArr}
             />
             <SunData keyTimesArr={keyTimesArr} sunDataObj={sunDataObj} />
         </div>
