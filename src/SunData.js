@@ -1,64 +1,58 @@
+import { DateTime } from "luxon";
 let SunCalc = require("suncalc3");
 
-export default function SunData({ lat, lng, date }) {
+export default function SunData({
+    lat,
+    lng,
+    date,
+    tzId,
+    keyTimesArr,
+    sunDataObj,
+}) {
     // IMPORTANT TIMES. ADD TO THIS TO ADD A TIME
-    let keyTimesArr = [
-        "blueHourDawnStart",
-        "blueHourDawnEnd",
-        "goldenHourDawnStart",
-        "goldenHourDawnEnd",
-        "solarNoon",
-        "goldenHourDuskStart",
-        "goldenHourDuskEnd",
-        "blueHourDuskStart",
-        "blueHourDuskEnd",
-    ];
 
     // console.log(date);
 
-    let sunData = SunCalc.getSunTimes(date, lat, lng);
+    // let sunData = SunCalc.getSunTimes(date, lat, lng);
     // console.log(sunData);
 
-    // TODO Currently all data is in America/New_York time. If a Minutes value starts with 0, it needs to be added to the string
+    // let dateTimeObj = DateTime.fromObject(sunData["blueHourDawnStart"].value);
+    // console.log(dateTimeObj);
 
-    function convertTimeToStr(timeType) {
-        let hours = sunData[timeType].value.getHours();
-        let minutes = sunData[timeType].value.getMinutes();
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        }
-        if (hours >= 12) {
-            hours = hours - 12;
-            return hours + ":" + minutes + " PM";
-        }
-        return hours + ":" + minutes + " AM";
-    }
+    // function convertTimeToStr(timeType) {
+    //     let unAdjustedTime = sunData[timeType].value;
 
-    const sunDataObj = keyTimesArr.reduce((result, time) => {
-        const timestamp = sunData[time].ts;
-        const sunPositionRadians = SunCalc.getPosition(
-            timestamp,
-            lat,
-            lng
-        ).azimuth;
+    //     let dateTimeObjUnadjusted = DateTime.fromJSDate(unAdjustedTime);
 
-        const sunPositionDegrees =
-            Math.floor(sunPositionRadians * (180 / Math.PI) * 10) / 10;
+    //     let dateTimeObjAdjusted = dateTimeObjUnadjusted.setZone(tzId);
+    //     return dateTimeObjAdjusted.toLocaleString(DateTime.TIME_SIMPLE);
+    // }
 
-        const sunHeight =
-            Math.floor(
-                SunCalc.getPosition(timestamp, lat, lng).altitudeDegrees * 10
-            ) / 10;
+    // const sunDataObj = keyTimesArr.reduce((result, time) => {
+    //     const timestamp = sunData[time].ts;
+    //     const sunPositionRadians = SunCalc.getPosition(
+    //         timestamp,
+    //         lat,
+    //         lng
+    //     ).azimuth;
 
-        result[time] = {
-            time: convertTimeToStr(time),
-            position: sunPositionDegrees,
-            height: sunHeight,
-        };
+    //     const sunPositionDegrees =
+    //         Math.floor(sunPositionRadians * (180 / Math.PI) * 10) / 10;
 
-        return result;
-    }, {});
-    console.log(sunDataObj);
+    //     const sunHeight =
+    //         Math.floor(
+    //             SunCalc.getPosition(timestamp, lat, lng).altitudeDegrees * 10
+    //         ) / 10;
+
+    //     result[time] = {
+    //         time: convertTimeToStr(time),
+    //         position: sunPositionDegrees,
+    //         height: sunHeight,
+    //     };
+
+    //     return result;
+    // }, {});
+    // console.log(sunDataObj);
 
     return (
         <div className="rounded-lg  container bg-slate-100 p-4 my-4 mx-auto">

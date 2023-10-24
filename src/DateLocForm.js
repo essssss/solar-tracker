@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import axios from "axios";
 import { DateTime } from "luxon";
+import ArcOverlay from "./ArcOverlay";
 
 import LocationPicker from "./LocationPicker";
 
@@ -16,11 +17,7 @@ export default function DateLocForm({
     const handleDateChange = (newDate) => {
         if (newDate.startDate) onDateChange(newDate); // Update the date in the parent component
     };
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     await getTimeZone();
-    //     // console.log(submittedDate, timestamp, tzId);
-    // };
+
     return (
         <div className="mx-aut">
             <form className="mx-aut">
@@ -44,14 +41,19 @@ export default function DateLocForm({
                         lng={lng}
                         onLocationChange={onLocationChange}
                     />
+                    <ArcOverlay
+                        degrees={[65, 75, 90, 150, 165, 295]}
+                        colors={[
+                            "darkblue",
+                            "darkblue",
+                            "orange",
+                            "orange",
+                            "lightblue",
+                        ]}
+                        radius={100}
+                        width={4}
+                    />
                 </div>
-                {/* 
-                <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                    onClick={console.log("hi :)")}
-                >
-                    See results
-                </button> */}
             </form>
         </div>
     );

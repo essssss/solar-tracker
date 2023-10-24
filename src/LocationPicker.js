@@ -1,7 +1,32 @@
 import React from "react";
 import GoogleMapReact from "google-map-react";
+import ArcOverlay from "./ArcOverlay";
 
-const Marker = ({ text }) => <div>{text}</div>;
+const Marker = ({ lat, lng, text }) => (
+    <div
+        style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+        }}
+    >
+        {text}
+        <ArcOverlay
+            degrees={[65, 75, 90, 150, 165, 295]}
+            colors={[
+                "darkblue",
+                "darkblue",
+                "orange",
+                "lightblue",
+                "orange",
+                "darkblue",
+            ]}
+            radius={100}
+            width={4}
+        />
+    </div>
+);
 
 export default function LocationPicker({ lat, lng, onLocationChange }) {
     return (
