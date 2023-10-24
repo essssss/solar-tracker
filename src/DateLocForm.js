@@ -41,18 +41,6 @@ export default function DateLocForm({
                         lng={lng}
                         onLocationChange={onLocationChange}
                     />
-                    <ArcOverlay
-                        degrees={[65, 75, 90, 150, 165, 295]}
-                        colors={[
-                            "darkblue",
-                            "darkblue",
-                            "orange",
-                            "orange",
-                            "lightblue",
-                        ]}
-                        radius={100}
-                        width={4}
-                    />
                 </div>
             </form>
         </div>

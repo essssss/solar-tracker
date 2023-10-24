@@ -37,7 +37,8 @@ function App() {
                 date.startDate,
                 "yyyy-MM-dd"
             );
-            const unixTimestamp = selectedStartDate.toMillis();
+            const unixTimestamp = selectedStartDate.toSeconds();
+
             try {
                 const response = await axios.get(
                     `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lng}&timestamp=${unixTimestamp}&key=${apiKey}`
@@ -55,13 +56,15 @@ function App() {
     }, [lat, lng, date.startDate]);
 
     useEffect(() => {
-        let sunData = SunCalc.getSunTimes(date, lat, lng);
+        let sunData = SunCalc.getSunTimes(date.startDate, lat, lng);
+
         function convertTimeToStr(timeType) {
             let unAdjustedTime = sunData[timeType].value;
 
             let dateTimeObjUnadjusted = DateTime.fromJSDate(unAdjustedTime);
 
             let dateTimeObjAdjusted = dateTimeObjUnadjusted.setZone(tzId);
+
             return dateTimeObjAdjusted.toLocaleString(DateTime.TIME_SIMPLE);
         }
         const newSunDataObj = keyTimesArr.reduce((result, time) => {
@@ -87,9 +90,11 @@ function App() {
                 height: sunHeight,
             };
 
-            setSunDataObj(newSunDataObj);
+            return result;
         }, {});
-    }, [lat, lng, date]);
+
+        setSunDataObj(newSunDataObj);
+    }, [lat, lng, date.startDate]);
 
     return (
         <div className="rounded-lg  container bg-slate-200 mx-auto w-3/4 my-4 p-4">
@@ -106,13 +111,7 @@ function App() {
                     setDate(newDate);
                 }}
             />
-            <SunData
-                lat={lat}
-                lng={lng}
-                date={date.startDate}
-                tzId={tzId}
-                keyTimesArr={keyTimesArr}
-            />
+            <SunData keyTimesArr={keyTimesArr} sunDataObj={sunDataObj} />
         </div>
     );
 }
