@@ -4,17 +4,27 @@ import SunData from "./SunData";
 import { DateTime } from "luxon";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import ArcOverlay from "./ArcOverlay";
+import { createPortal } from "react-dom";
+import CanvasArc from "./CanvasArc";
 let SunCalc = require("suncalc3");
 
 function App() {
-    const [lat, setLat] = useState(38.8409);
-    const [lng, setLng] = useState(-105.0423);
+    const [center, setCenter] = useState({
+        lat: 38.8409,
+        lng: -105.0423,
+    });
+    const [markerPosition, setMarkerPosition] = useState(center);
+    const handleMapClick = (e) => {
+        setMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+    };
     const [tzId, setTzId] = useState();
     const [date, setDate] = useState({
         startDate: DateTime.local().toFormat("yyyy-MM-dd"),
         endDate: DateTime.local().toFormat("yyyy-MM-dd"),
     });
     const [sunDataObj, setSunDataObj] = useState({});
+
     let keyTimesArr = [
         "blueHourDawnStart",
         "blueHourDawnEnd",
@@ -41,7 +51,7 @@ function App() {
 
             try {
                 const response = await axios.get(
-                    `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lng}&timestamp=${unixTimestamp}&key=${apiKey}`
+                    `https://maps.googleapis.com/maps/api/timezone/json?location=${markerPosition.lat},${markerPosition.lng}&timestamp=${unixTimestamp}&key=${apiKey}`
                 );
 
                 if (response.data.status === "ZERO_RESULTS") {
@@ -53,10 +63,15 @@ function App() {
             }
         }
         getTimeZone();
-    }, [lat, lng, date.startDate]);
+    }, [markerPosition, date.startDate]);
+    useEffect(() => console.log(tzId), [tzId]);
 
     useEffect(() => {
-        let sunData = SunCalc.getSunTimes(date.startDate, lat, lng);
+        let sunData = SunCalc.getSunTimes(
+            date.startDate,
+            markerPosition.lat,
+            markerPosition.lng
+        );
 
         function convertTimeToStr(timeType) {
             let unAdjustedTime = sunData[timeType].value;
@@ -71,8 +86,8 @@ function App() {
             const timestamp = sunData[time].ts;
             const sunPositionRadians = SunCalc.getPosition(
                 timestamp,
-                lat,
-                lng
+                markerPosition.lat,
+                markerPosition.lng
             ).azimuth;
 
             const sunPositionDegrees =
@@ -80,8 +95,11 @@ function App() {
 
             const sunHeight =
                 Math.floor(
-                    SunCalc.getPosition(timestamp, lat, lng).altitudeDegrees *
-                        10
+                    SunCalc.getPosition(
+                        timestamp,
+                        markerPosition.lat,
+                        markerPosition.lng
+                    ).altitudeDegrees * 10
                 ) / 10;
 
             result[time] = {
@@ -94,26 +112,28 @@ function App() {
         }, {});
 
         setSunDataObj(newSunDataObj);
-    }, [lat, lng, date.startDate]);
+    }, [markerPosition, date.startDate]);
 
     return (
         <div className="rounded-lg  container bg-slate-200 mx-auto w-3/4 my-4 p-4">
             <h1 className="text-3xl font-bold underline">Sun Tracker</h1>
             <DateLocForm
-                lat={lat}
-                lng={lng}
+                markerPosition={markerPosition}
+                handleMapClick={handleMapClick}
+                center={center}
                 date={date}
-                onLocationChange={async (newLat, newLng) => {
-                    setLat(newLat);
-                    setLng(newLng);
-                }}
                 onDateChange={(newDate) => {
                     setDate(newDate);
                 }}
                 sunDataObj={sunDataObj}
                 keyTimesArr={keyTimesArr}
             />
-            <SunData keyTimesArr={keyTimesArr} sunDataObj={sunDataObj} />
+            <CanvasArc />
+            <SunData
+                keyTimesArr={keyTimesArr}
+                sunDataObj={sunDataObj}
+                tzId={tzId}
+            />
         </div>
     );
 }

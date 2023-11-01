@@ -1,20 +1,21 @@
 import Datepicker from "react-tailwindcss-datepicker";
+import { useState } from "react";
 
-import LocationPicker from "./LocationPicker";
+import MapComponent from "./MapComponent";
 
 export default function DateLocForm({
-    lat,
-    lng,
+    center,
     date,
-    onLocationChange,
+    markerPosition,
+    handleMapClick,
     onDateChange,
     sunDataObj,
-    keyTimesArr,
 }) {
     // This is our form handler:
     const handleDateChange = (newDate) => {
         if (newDate.startDate) onDateChange(newDate); // Update the date in the parent component
     };
+
     console.log(sunDataObj);
     return (
         <div className="mx-aut">
@@ -32,14 +33,10 @@ export default function DateLocForm({
                 </div>
 
                 <div className="container mx-aut p-6">
-                    {/* Include the Map component for the map */}
-
-                    <LocationPicker
-                        lat={lat}
-                        lng={lng}
-                        onLocationChange={onLocationChange}
-                        sunDataObj={sunDataObj}
-                        keyTimesArr={keyTimesArr}
+                    <MapComponent
+                        center={center}
+                        markerPosition={markerPosition}
+                        handleMapClick={handleMapClick}
                     />
                 </div>
             </form>
