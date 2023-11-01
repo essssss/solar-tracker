@@ -4,9 +4,9 @@ import SunData from "./SunData";
 import { DateTime } from "luxon";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import ArcOverlay from "./ArcOverlay";
-import { createPortal } from "react-dom";
-import CanvasArc from "./CanvasArc";
+import KeyTimes from "./KeyTimes";
+import Gradient from "./Gradient";
+
 let SunCalc = require("suncalc3");
 
 function App() {
@@ -40,33 +40,7 @@ function App() {
 
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
-    useEffect(() => {
-        // Fetch timezone when lat, lng, or date changes
-        async function getTimeZone() {
-            const selectedStartDate = DateTime.fromFormat(
-                date.startDate,
-                "yyyy-MM-dd"
-            );
-            const unixTimestamp = selectedStartDate.toSeconds();
-
-            try {
-                const response = await axios.get(
-                    `https://maps.googleapis.com/maps/api/timezone/json?location=${markerPosition.lat},${markerPosition.lng}&timestamp=${unixTimestamp}&key=${apiKey}`
-                );
-
-                if (response.data.status === "ZERO_RESULTS") {
-                    throw new Error("Please choose a different location.");
-                }
-                setTzId(response.data.timeZoneId);
-            } catch (error) {
-                console.error("Error fetching time zone information:", error);
-            }
-        }
-        getTimeZone();
-    }, [markerPosition, date.startDate]);
-    useEffect(() => console.log(tzId), [tzId]);
-
-    useEffect(() => {
+    const getSunDataObj = () => {
         let sunData = SunCalc.getSunTimes(
             date.startDate,
             markerPosition.lat,
@@ -112,7 +86,39 @@ function App() {
         }, {});
 
         setSunDataObj(newSunDataObj);
+    };
+
+    useEffect(() => {
+        // Fetch timezone when lat, lng, or date changes
+        async function getTimeZone() {
+            const selectedStartDate = DateTime.fromFormat(
+                date.startDate,
+                "yyyy-MM-dd"
+            );
+            const unixTimestamp = selectedStartDate.toSeconds();
+
+            try {
+                const response = await axios.get(
+                    `https://maps.googleapis.com/maps/api/timezone/json?location=${markerPosition.lat},${markerPosition.lng}&timestamp=${unixTimestamp}&key=${apiKey}`
+                );
+
+                if (response.data.status === "ZERO_RESULTS") {
+                    throw new Error("Please choose a different location.");
+                }
+                setTzId(response.data.timeZoneId);
+                getSunDataObj();
+            } catch (error) {
+                console.error("Error fetching time zone information:", error);
+            }
+        }
+        getTimeZone();
     }, [markerPosition, date.startDate]);
+
+    useEffect(() => {
+        if (tzId) {
+            getSunDataObj();
+        }
+    }, [tzId, markerPosition, date.startDate]);
 
     return (
         <div className="rounded-lg  container bg-slate-200 mx-auto w-3/4 my-4 p-4">
@@ -128,7 +134,8 @@ function App() {
                 sunDataObj={sunDataObj}
                 keyTimesArr={keyTimesArr}
             />
-            <CanvasArc />
+            <KeyTimes sunDataObj={sunDataObj} />
+            <Gradient />
             <SunData
                 keyTimesArr={keyTimesArr}
                 sunDataObj={sunDataObj}

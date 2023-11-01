@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import ArcOverlay from "./ArcOverlay";
-import CanvasArc from "./CanvasArc";
 
 const containerStyle = {
-    width: "100%",
+    marginLeft: "auto", // Use camelCase for margin-x
+    marginRight: "auto", // Use camelCase for margin-x
+    width: "95%",
     height: "600px",
 };
 
@@ -30,33 +30,12 @@ function MapComponent({ center, markerPosition, handleMapClick }) {
     return isLoaded ? (
         <GoogleMap
             mapContainerStyle={containerStyle}
-            // center={center}
-            // defaultZoom={5}
             onLoad={onLoad}
             onUnmount={onUnmount}
             onClick={handleMapClick}
         >
             {/* Child components, such as markers, info windows, etc. */}
             {markerPosition && <Marker position={markerPosition} />}
-            {markerPosition && <CanvasArc position={markerPosition} />}
-            {/* {markerPosition && (
-                <ArcOverlay
-                    zIndex={1}
-                    degrees={[-39, -35, -32, -26, 90, 205, 211, 214, 219]}
-                    colors={[
-                        "darkblue",
-                        "darkblue",
-                        "orange",
-                        "lightblue",
-                        "lightblue",
-                        "orange",
-                        "darkblue",
-                        "darkblue",
-                    ]}
-                    center={center}
-                    markerPosition={markerPosition}
-                />
-            )} */}
         </GoogleMap>
     ) : (
         <></>
