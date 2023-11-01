@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import {
+    GoogleMap,
+    Marker,
+    useJsApiLoader,
+    StandaloneSearchBox,
+} from "@react-google-maps/api";
 
 const containerStyle = {
     marginLeft: "auto", // Use camelCase for margin-x

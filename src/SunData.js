@@ -12,18 +12,18 @@ export default function SunData({ keyTimesArr, sunDataObj }) {
                     {keyTimesArr.map((time) => {
                         return (
                             <div
-                                className="rounded-lg bg-slate-400 p-4 m-4 text-center text-slate-700"
+                                className="rounded-lg bg-slate-300 p-1 m-4 text-center text-slate-700"
                                 key={time}
                             >
-                                <p className="bg-slate-300 rounded m-1">
+                                <p className="bg-slate-200 rounded m-2">
                                     <b>{time}</b>: {sunDataObj[time]?.time}{" "}
                                     {/* Use the optional chaining operator */}
                                 </p>
-                                <p className="bg-slate-200 rounded m-1">
+                                <p className="bg-slate-200 rounded m-2">
                                     <b>Sun Position: </b>{" "}
                                     {sunDataObj[time]?.position}°
                                 </p>
-                                <p className="bg-slate-300 rounded m-1">
+                                <p className="bg-slate-200 rounded m-2">
                                     <b>Sun Height: </b>{" "}
                                     {sunDataObj[time]?.height}°
                                 </p>

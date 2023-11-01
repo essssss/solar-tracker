@@ -134,8 +134,13 @@ function App() {
                 sunDataObj={sunDataObj}
                 keyTimesArr={keyTimesArr}
             />
-            <KeyTimes sunDataObj={sunDataObj} />
-            <Gradient />
+            <div
+                className="bg-slate-100
+            my-4 p-4 rounded-lg"
+            >
+                <KeyTimes sunDataObj={sunDataObj} />
+                <Gradient />
+            </div>
             <SunData
                 keyTimesArr={keyTimesArr}
                 sunDataObj={sunDataObj}
