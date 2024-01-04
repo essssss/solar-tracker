@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import KeyTimes from "./KeyTimes";
 import Gradient from "./Gradient";
 
-let SunCalc = require("suncalc3");
+import SunCalc from "suncalc3";
 
 function App() {
     const [center, setCenter] = useState({
@@ -38,7 +38,7 @@ function App() {
     ];
     // State for sunDataObj
 
-    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+    const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY;
 
     const getSunDataObj = () => {
         let sunData = SunCalc.getSunTimes(
