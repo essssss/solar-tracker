@@ -10,7 +10,7 @@ export default function SunData({ keyTimesArr, sunDataObj }) {
     return (
         <>
             <div className="rounded-lg container bg-slate-100 p-3 my-4 mx-auto">
-                <div className="grid grid-cols-2">
+                <div className="grid md:grid-cols-2">
                     {keyTimesArr.map((time) => {
                         return (
                             <div

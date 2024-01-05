@@ -33,7 +33,7 @@ export default function DateLocForm({
                     </div>
                 </div>
 
-                <div className="container mx-aut p-6 bg-slate-100 rounded-lg">
+                <div className="container mx-aut py-6  md:px-6 bg-slate-100 rounded-lg">
                     <MapComponent
                         center={center}
                         markerPosition={markerPosition}

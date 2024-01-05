@@ -121,8 +121,10 @@ function App() {
     }, [tzId, markerPosition, date.startDate]);
 
     return (
-        <div className="rounded-lg  container bg-slate-200 mx-auto w-3/4 my-4 p-4">
-            <h1 className="text-3xl font-bold underline">Sun Tracker</h1>
+        <div className="rounded-lg  container bg-slate-200 mx-auto lg:w-3/4 my-4 md:p-4">
+            <h1 className="text-center text-3xl font-bold underline">
+                Sun Tracker
+            </h1>
             <DateLocForm
                 markerPosition={markerPosition}
                 handleMapClick={handleMapClick}

@@ -10,7 +10,7 @@ const containerStyle = {
     marginLeft: "auto", // Use camelCase for margin-x
     marginRight: "auto", // Use camelCase for margin-x
     width: "95%",
-    height: "600px",
+    height: "500px",
 };
 
 function MapComponent({ center, markerPosition, handleMapClick }) {
