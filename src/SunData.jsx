@@ -15,19 +15,20 @@ export default function SunData({ keyTimesArr, sunDataObj }) {
                         return (
                             <div
                                 className="rounded-lg bg-slate-300 p-1 m-2 text-center text-slate-700"
-                                key={time}
+                                key={time[0]}
                             >
-                                <p className="bg-slate-200 rounded m-1">
-                                    <b>{time}</b>: {sunDataObj[time]?.time}{" "}
+                                <p className="bg-slate-200 rounded m-1 py-1">
+                                    <b>{time[1]}</b>:{" "}
+                                    {sunDataObj[time[0]]?.time}{" "}
                                     {/* Use the optional chaining operator */}
                                 </p>
-                                <p className="bg-slate-200 rounded m-1">
+                                <p className="bg-slate-200 rounded m-1 py-1">
                                     <b>Sun Position: </b>{" "}
-                                    {sunDataObj[time]?.position}°
+                                    {sunDataObj[time[0]]?.position}°
                                 </p>
-                                <p className="bg-slate-200 rounded m-1">
+                                <p className="bg-slate-200 rounded m-1 py-1">
                                     <b>Sun Height: </b>{" "}
-                                    {sunDataObj[time]?.height}°
+                                    {sunDataObj[time[0]]?.height}°
                                 </p>
                             </div>
                         );

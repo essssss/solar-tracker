@@ -26,15 +26,15 @@ function App() {
     const [sunDataObj, setSunDataObj] = useState({});
 
     let keyTimesArr = [
-        "blueHourDawnStart",
-        "blueHourDawnEnd",
-        "goldenHourDawnStart",
-        "goldenHourDawnEnd",
-        "solarNoon",
-        "goldenHourDuskStart",
-        "goldenHourDuskEnd",
-        "blueHourDuskStart",
-        "blueHourDuskEnd",
+        ["blueHourDawnStart", "Blue Hour Dawn, Start"],
+        ["blueHourDawnEnd", "Blue Hour Dawn, End"],
+        ["goldenHourDawnStart", "Golden Hour Dawn, Start"],
+        ["goldenHourDawnEnd", "Golden Hour Dawn, End"],
+        ["solarNoon", "Solar Noon"],
+        ["goldenHourDuskStart", "Golden Hour Dusk, Start"],
+        ["goldenHourDuskEnd", "Golden Hour Dusk, End"],
+        ["blueHourDuskStart", "Blue Hour Dusk, Start"],
+        ["blueHourDuskEnd", "Blue Hour Dusk, End"],
     ];
     // State for sunDataObj
 
@@ -56,7 +56,8 @@ function App() {
 
             return dateTimeObjAdjusted.toLocaleString(DateTime.TIME_SIMPLE);
         }
-        const newSunDataObj = keyTimesArr.reduce((result, time) => {
+        const newSunDataObj = keyTimesArr.reduce((result, timePair) => {
+            const time = timePair[0];
             const timestamp = sunData[time].ts;
             const sunPositionRadians = SunCalc.getPosition(
                 timestamp,
